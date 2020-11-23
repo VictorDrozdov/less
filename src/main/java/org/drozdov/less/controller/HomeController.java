@@ -1,6 +1,7 @@
 package org.drozdov.less.controller;
 
-import jakarta.validation.Valid;
+
+import org.drozdov.less.dao.UserDAO;
 import org.drozdov.less.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.validation.Valid;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,15 +20,17 @@ import java.util.Collection;
 
 @Controller
 public class HomeController {
-    private Collection<User> users = new ArrayList<>();
+    @Autowired
+    private UserDAO userDAO;
+   // private Collection<User> users = new ArrayList<>();
     @GetMapping(value = "/")
     public String hello(){
         return "hello";
     }
 
     @RequestMapping(value = "/users")
-    public String getUsers(Model model) {
-        model.addAttribute( "users", users);
+    public String getUsers(Model model) throws SQLException {
+        model.addAttribute( "users",userDAO.getAll());
         return "users";
     }
     @GetMapping(value = "/addUsers")
@@ -40,7 +44,7 @@ public class HomeController {
         if (result.hasErrors()){
             return "sign_up";
         }
-        users.add(user);
+      //  users.add(user);
         return "redirect:/users";
     }
 
