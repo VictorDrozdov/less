@@ -4,7 +4,7 @@
     <title>Sign Up</title>
 </head>
 <body>
-<@sf.form action="/addUsers" method="post" modelAttribute="user">
+<@sf.form action="/addusers" method="post" modelAttribute="user">
     <div>
         <@sf.label path= "name">Name</@sf.label>
         <@sf.input path= "name"/>
