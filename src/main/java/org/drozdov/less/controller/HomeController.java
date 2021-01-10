@@ -3,8 +3,10 @@ package org.drozdov.less.controller;
 
 import org.drozdov.less.dao.UserDAO;
 import org.drozdov.less.entity.User;
+
 import org.drozdov.less.utils.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,15 +16,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
-
+import java.sql.SQLException;
 
 
 @Controller
 public class HomeController {
-    @Autowired
-    private UserValidator userValidator;
+    @Qualifier("hibernateUserDAO")
     @Autowired
     private UserDAO userDAO;
+
+    @Autowired
+    private UserValidator userValidator;
+
+
+
 
     @GetMapping(value = "/")
     public String hello(){
@@ -30,7 +37,7 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/users")
-    public String getUsers(Model model){
+    public String getUsers(Model model) throws SQLException {
         model.addAttribute( "users",userDAO.getAll());
         return "users";
     }
@@ -41,7 +48,7 @@ public class HomeController {
         return "sign_up";
     }
     @PostMapping(value = "/addusers")
-    public String getSignUp(@ModelAttribute @Valid User user, BindingResult result)  {
+    public String getSignUp(@ModelAttribute @Valid User user, BindingResult result) throws SQLException {
         userValidator.validate(user,result);
         if (result.hasErrors()){
             return "sign_up";
